@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId "com.yunyu.study"
-        minSdk 21
+        minSdk 24
         targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
