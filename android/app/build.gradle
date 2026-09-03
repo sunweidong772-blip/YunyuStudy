@@ -41,9 +41,20 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file("yunyu-release.keystore")
+            storePassword "yunyu123"
+            keyAlias "yunyu"
+            keyPassword "yunyu123"
+        }
+    }
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
 }
