@@ -6,11 +6,33 @@ class ApiService {
   static const String baseUrl = 'http://8.160.178.28/api';
 
   static String? _token;
+  static Map<String, dynamic>? _currentUser;
 
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
+    final userStr = prefs.getString('current_user');
+    if (userStr != null) {
+      _currentUser = jsonDecode(userStr);
+    }
   }
+
+  static Future<void> setCurrentUser(Map<String, dynamic> user) async {
+    _currentUser = user;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('current_user', jsonEncode(user));
+  }
+
+  static Map<String, dynamic>? get currentUser => _currentUser;
+
+  static int? get currentUserId => _currentUser?['id'] as int?;
+
+  static String? get currentUserRole => _currentUser?['role'] as String?;
+
+  static bool get isTeacher => _currentUser?['role'] == 'teacher';
+  static bool get isAdmin => _currentUser?['role'] == 'admin';
+  static bool get isParent => _currentUser?['role'] == 'parent';
+  static bool get isStudent => _currentUser?['role'] == 'student';
 
   static Future<void> setToken(String token) async {
     _token = token;
@@ -65,6 +87,9 @@ class ApiService {
     final data = jsonDecode(res.body);
     if (data['success'] == true && data['token'] != null) {
       await setToken(data['token']);
+      if (data['user'] != null) {
+        await setCurrentUser(Map<String, dynamic>.from(data['user']));
+      }
     }
     return data;
   }
@@ -79,6 +104,9 @@ class ApiService {
     final data = jsonDecode(res.body);
     if (data['success'] == true && data['token'] != null) {
       await setToken(data['token']);
+      if (data['user'] != null) {
+        await setCurrentUser(Map<String, dynamic>.from(data['user']));
+      }
     }
     return data;
   }

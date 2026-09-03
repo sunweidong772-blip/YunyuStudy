@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../theme/app_theme.dart';
 import '../../services/api_service.dart';
 import '../math/wrong_book_page.dart';
@@ -11,6 +12,8 @@ import '../chat/class_list_page.dart';
 import '../assistant/assistant_page.dart';
 import '../teacher_verify/teacher_verify_page.dart';
 import '../admin/admin_users_page.dart';
+import '../admin/teacher_verify_admin_page.dart';
+import '../parent/parent_home_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -270,6 +273,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (!ApiService.isLoggedIn) return _showLoginPrompt();
                             Navigator.push(context, MaterialPageRoute(builder: (_) => const AssistantPage()));
                           }),
+                          if (ApiService.isParent) ...[
+                            _buildDivider(),
+                            _buildMenuItem(Icons.family_restroom, '家长端', '查看孩子学习情况', Colors.teal, () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentHomePage()));
+                            }),
+                          ],
                         ],
                       ),
                     ),
@@ -311,17 +320,30 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(context, MaterialPageRoute(builder: (_) => const ChangelogPage()));
                           }),
                           _buildDivider(),
-                          _buildMenuItem(Icons.people, '官方QQ群', '加入官方QQ交流群', Colors.blue, () {
-                            _showInfo('官方QQ群', '云屿官方QQ群：1109731425\n\n点击下方按钮一键加入QQ群，与官方人员和其他用户交流。\n\n（如无法自动跳转，请手动搜索群号：1109731425）');
+                          _buildMenuItem(Icons.people, '官方QQ群', '加入官方QQ交流群', Colors.blue, () async {
+                            const qqGroupUrl = 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=1109731425&card_type=group&source=qrcode';
+                            try {
+                              bool launched = await launchUrl(Uri.parse(qqGroupUrl), mode: LaunchMode.externalApplication);
+                              if (!launched) {
+                                _showInfo('官方QQ群', '云屿官方QQ群：1109731425\n\n请手动打开QQ搜索群号加入。');
+                              }
+                            } catch (e) {
+                              _showInfo('官方QQ群', '云屿官方QQ群：1109731425\n\n请手动打开QQ搜索群号加入。');
+                            }
                           }),
-                          _buildDivider(),
-                          _buildMenuItem(Icons.admin_panel_settings, '用户管理', '管理员功能：添加/删除用户', Colors.purple, () {
-                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersPage()));
-                          }),
+                          if (ApiService.isAdmin) ...[
+                            _buildDivider(),
+                            _buildMenuItem(Icons.admin_panel_settings, '用户管理', '管理员功能：添加/删除用户', Colors.purple, () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersPage()));
+                            }),
+                            _buildDivider(),
+                            _buildMenuItem(Icons.verified_user, '教师认证审核', '审核教师认证申请', Colors.teal, () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const TeacherVerifyAdminPage()));
+                            }),
+                          ],
                           _buildDivider(),
                           _buildMenuItem(Icons.info_outline, '关于云屿', '版本信息', AppColors.textTertiary, () {
-                            _showInfo('关于云屿', '云屿小学学业辅导工具\n版本：v2.1.0\n\n涵盖数学练习、英语单词、作文范文三大模块，覆盖小学1-6年级。\n\n新增：班级群、私信、教师认证、小助手、用户管理\n\n教师后台：http://8.160.178.28:8090/admin\n\n让学习更轻松，让成长更快乐！');
+                            _showInfo('关于云屿', '云屿小学学业辅导工具\n版本：v2.1.0\n\n涵盖数学练习、英语单词、作文范文三大模块，覆盖小学1-6年级。\n\n新增：班级群、私信、教师认证、小助手、用户管理\n\n让学习更轻松，让成长更快乐！');
                           }),
                         ],
                       ),

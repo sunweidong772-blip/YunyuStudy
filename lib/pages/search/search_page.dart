@@ -101,20 +101,44 @@ class _SearchPageState extends State<SearchPage> {
     if (result['type'] == 'word') { icon = Icons.menu_book; color = AppColors.success; typeLabel = '单词'; }
     else if (result['type'] == 'essay') { icon = Icons.edit_note; color = AppColors.warning; typeLabel = '语文作文'; }
     else { icon = Icons.g_translate; color = AppColors.primary; typeLabel = '英语作文'; }
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-      child: Row(children: [
-        Container(width: 40, height: 40, decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: color, size: 20)),
-        SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(result['title'], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-          SizedBox(height: 2),
-          Text('$typeLabel · ${result['subtitle']}', style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
-        ])),
-        Icon(Icons.chevron_right, color: AppColors.textTertiary),
-      ]),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(result['title']),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('类型：$typeLabel', style: TextStyle(fontSize: 13, color: AppColors.textTertiary)),
+                  SizedBox(height: 8),
+                  Text(result['content'] ?? result['subtitle'] ?? '', style: TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(context), child: Text('关闭')),
+            ],
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.all(14),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+        child: Row(children: [
+          Container(width: 40, height: 40, decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: color, size: 20)),
+          SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(result['title'], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            SizedBox(height: 2),
+            Text('$typeLabel · ${result['subtitle']}', style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
+          ])),
+          Icon(Icons.chevron_right, color: AppColors.textTertiary),
+        ]),
+      ),
     );
   }
 }

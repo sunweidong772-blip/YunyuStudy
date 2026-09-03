@@ -191,9 +191,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   int _getCurrentUserId() {
-    // 从token中解析或者从本地存储获取
-    // 简化处理，使用一个固定的方式
-    return 0; // 这个会在实际使用时通过用户信息获取
+    return ApiService.currentUserId ?? 0;
   }
 
   Widget _buildMessageBubble(Map<String, dynamic> msg, bool isMe) {

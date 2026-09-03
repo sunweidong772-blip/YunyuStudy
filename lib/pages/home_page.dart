@@ -29,6 +29,55 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _checkVersion();
+  }
+
+  Future<void> _checkVersion() async {
+    try {
+      final result = await ApiService.checkVersion('2.1.0');
+      if (result['success'] == true && result['has_update'] == true) {
+        final version = result['version'];
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: version['force_update'] == 1 ? false : true,
+          builder: (context) => AlertDialog(
+            title: Text('发现新版本 v${version['version']}'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (version['title'] != null) Text(version['title'], style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  const SizedBox(height: 8),
+                  Text(version['content'] ?? '修复了一些问题，优化了用户体验。'),
+                ],
+              ),
+            ),
+            actions: [
+              if (version['force_update'] != 1)
+                TextButton(onPressed: () => Navigator.pop(context), child: const Text('稍后')),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('请联系管理员获取最新版本'), backgroundColor: Colors.green),
+                  );
+                },
+                child: const Text('立即更新'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // 忽略版本检查错误
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
