@@ -1,6 +1,6 @@
 name: yunyu_study
 description: 云屿小学学业辅导工具
-version: 2.1.0+1
+version: 2.6.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -12,6 +12,7 @@ dependencies:
   http: ^1.2.0
   cupertino_icons: ^1.0.6
   url_launcher: ^6.2.0
+  flutter_tts: ^3.8.5
 
 dev_dependencies:
   flutter_test:

@@ -14,6 +14,7 @@ import '../teacher_verify/teacher_verify_page.dart';
 import '../admin/admin_users_page.dart';
 import '../admin/teacher_verify_admin_page.dart';
 import '../parent/parent_home_page.dart';
+import '../teacher/teacher_dashboard_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -277,6 +278,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             _buildDivider(),
                             _buildMenuItem(Icons.family_restroom, '家长端', '查看孩子学习情况', Colors.teal, () {
                               Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentHomePage()));
+                            }),
+                          ],
+                          if (ApiService.isTeacher || ApiService.isAdmin) ...[
+                            _buildDivider(),
+                            _buildMenuItem(Icons.dashboard, '教师后台', '数据概览、学生管理、作业管理', Colors.blue, () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const TeacherDashboardPage()));
                             }),
                           ],
                         ],
