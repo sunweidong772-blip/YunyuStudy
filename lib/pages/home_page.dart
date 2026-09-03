@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkVersion() async {
     try {
-      final result = await ApiService.checkVersion('2.1.0');
+      final result = await ApiService.checkUpdate('2.1.0');
       if (result['success'] == true && result['has_update'] == true) {
         final version = result['version'];
         if (!mounted) return;
