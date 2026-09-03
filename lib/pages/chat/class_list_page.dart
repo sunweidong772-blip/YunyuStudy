@@ -141,7 +141,7 @@ class _ClassListPageState extends State<ClassListPage> with SingleTickerProvider
                   _myClasses.add({
                     'id': DateTime.now().millisecondsSinceEpoch,
                     'name': nameController.text.trim(),
-                    'description': descController.text.trim() || '暂无描述',
+                    'description': descController.text.trim().isEmpty ? '暂无描述' : descController.text.trim(),
                     'member_count': 1,
                     'creator': '我',
                     'is_joined': true,

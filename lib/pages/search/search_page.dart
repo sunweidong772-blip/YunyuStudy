@@ -30,7 +30,7 @@ class _SearchPageState extends State<SearchPage> {
               'type': 'word',
               'title': word.word,
               'subtitle': '${word.meaning} · ${grade}年级',
-              'content': '单词：${word.word}\n释义：${word.meaning}\n年级：${grade}年级\n\n例句：${word.example ?? "暂无例句"}\n\n${word.exampleCn ?? ""}',
+              'content': '单词：${word.word}\n音标：${word.phonetic}\n释义：${word.meaning}\n年级：${grade}年级\n\n例句：${word.example}\n\n${word.exampleTranslation}',
               'data': word
             });
           }

@@ -310,6 +310,12 @@ class ApiService {
     return jsonDecode(res.body);
   }
 
+  // 修改用户密码
+  static Future<Map<String, dynamic>> resetUserPassword(int userId, String newPassword) async {
+    final res = await http.post(Uri.parse('$baseUrl/admin/users/reset-password'), headers: _headers, body: jsonEncode({'user_id': userId, 'new_password': newPassword}));
+    return jsonDecode(res.body);
+  }
+
   // 设置用户角色
   static Future<Map<String, dynamic>> setUserRole(int userId, String role) async {
     final res = await http.post(Uri.parse('$baseUrl/admin/users/set-role'), headers: _headers, body: jsonEncode({'user_id': userId, 'role': role}));
