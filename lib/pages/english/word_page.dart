@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import '../../theme/app_theme.dart';
 import '../../data/english_words.dart';
+import '../../data/study_data.dart';
 
 class WordPage extends StatefulWidget {
   final int grade;
@@ -15,11 +17,31 @@ class _WordPageState extends State<WordPage> {
   int _currentIndex = 0;
   bool _showBack = false;
   final Set<int> _mastered = {};
+  final FlutterTts _flutterTts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
     _words = EnglishData.getWordsByGrade(widget.grade);
+    _initTts();
+  }
+
+  void _initTts() async {
+    await _flutterTts.setLanguage('en-US');
+    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.setVolume(1.0);
+    await _flutterTts.setPitch(1.0);
+  }
+
+  void _speak(String text) async {
+    await _flutterTts.stop();
+    await _flutterTts.speak(text);
+  }
+
+  @override
+  void dispose() {
+    _flutterTts.stop();
+    super.dispose();
   }
 
   void _flipCard() {
@@ -52,6 +74,7 @@ class _WordPageState extends State<WordPage> {
         _mastered.remove(_currentIndex);
       } else {
         _mastered.add(_currentIndex);
+        StudyData.addLearnedWord();
       }
     });
   }
@@ -204,9 +227,9 @@ class _WordPageState extends State<WordPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.volume_up, color: Colors.white.withOpacity(0.6), size: 32),
+          GestureDetector(onTap: () => _speak(word.word), child: Icon(Icons.volume_up, color: Colors.white.withOpacity(0.8), size: 36)),
           SizedBox(height: 24),
-          Text(word.word, style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.w900, letterSpacing: 1)),
+          GestureDetector(onTap: () => _speak(word.word), child: Text(word.word, style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.w900, letterSpacing: 1))),
           SizedBox(height: 16),
           Text(word.phonetic, style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 20, fontWeight: FontWeight.w500)),
           SizedBox(height: 40),
@@ -237,7 +260,7 @@ class _WordPageState extends State<WordPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(word.word, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
-              Icon(Icons.volume_up, color: AppColors.success, size: 28),
+              GestureDetector(onTap: () => _speak(word.word), child: Icon(Icons.volume_up, color: AppColors.success, size: 28)),
             ],
           ),
           SizedBox(height: 4),

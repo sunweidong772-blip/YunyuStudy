@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'pages/home_page.dart';
+import 'data/study_data.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await StudyData.init();
   runApp(const YunyuStudyApp());
 }
 

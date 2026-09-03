@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'math/math_page.dart';
+import 'math/wrong_book_page.dart';
 import 'english/english_page.dart';
+import 'english/english_essay_page.dart';
 import 'essay/essay_page.dart';
 import 'profile/profile_page.dart';
+import 'search/search_page.dart';
+import 'exam/daily_exam_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -131,14 +135,17 @@ class StudyHomePage extends StatelessWidget {
                       Text('小学1-6年级同步辅导', style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 14)),
                       SizedBox(height: 20),
                       // 搜索框
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-                        child: Row(children: [
-                          Icon(Icons.search, color: AppColors.textTertiary, size: 20),
-                          SizedBox(width: 8),
-                          Text('搜索题目、单词、作文...', style: TextStyle(color: AppColors.textTertiary, fontSize: 14)),
-                        ]),
+                      GestureDetector(
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SearchPage())),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+                          child: Row(children: [
+                            Icon(Icons.search, color: AppColors.textTertiary, size: 20),
+                            SizedBox(width: 8),
+                            Text('搜索题目、单词、作文...', style: TextStyle(color: AppColors.textTertiary, fontSize: 14)),
+                          ]),
+                        ),
                       ),
                     ],
                   ),
@@ -172,6 +179,27 @@ class StudyHomePage extends StatelessWidget {
                     final state = context.findAncestorStateOfType<_HomePageState>();
                     state?._onTabTapped(3);
                   }),
+                ],
+              ),
+            ),
+            // 快捷功能
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Row(children: [
+                Container(width: 4, height: 18, decoration: BoxDecoration(color: AppColors.warning, borderRadius: BorderRadius.circular(2))),
+                SizedBox(width: 8),
+                Text('快捷功能', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+              ]),
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(child: _buildQuickItem(Icons.assignment, '每日小考', Color(0xFFEF4444), () => _showGradeDialog(context, '每日小考')),),
+                  SizedBox(width: 10),
+                  Expanded(child: _buildQuickItem(Icons.g_translate, '英语作文', Color(0xFF10B981), () => Navigator.push(context, MaterialPageRoute(builder: (_) => EnglishEssayPage()))),),
+                  SizedBox(width: 10),
+                  Expanded(child: _buildQuickItem(Icons.error_outline, '错题本', Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => WrongBookPage()))),),
                 ],
               ),
             ),
@@ -225,5 +253,31 @@ class StudyHomePage extends StatelessWidget {
         ]),
       ),
     );
+  }
+
+  Widget _buildQuickItem(IconData icon, String label, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Color(0x0A172C49), blurRadius: 8, offset: Offset(0, 2))]),
+        child: Column(children: [
+          Container(width: 44, height: 44, decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(14)), child: Icon(icon, color: color, size: 22)),
+          SizedBox(height: 8),
+          Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+        ]),
+      ),
+    );
+  }
+
+  void _showGradeDialog(BuildContext context, String title) {
+    showDialog(context: context, builder: (d) => AlertDialog(
+      title: Text('$title - 选择年级'),
+      content: Container(width: double.maxFinite, child: GridView.count(crossAxisCount: 3, shrinkWrap: true, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 1.2, children: List.generate(6, (i) {
+        int grade = i + 1;
+        return GestureDetector(onTap: () { Navigator.pop(d); Navigator.push(context, MaterialPageRoute(builder: (_) => DailyExamPage(grade: grade))); }, child: Container(decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(12)), child: Center(child: Text('$grade年级', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))));
+      }))),
+      actions: [TextButton(onPressed: () => Navigator.pop(d), child: Text('取消'))],
+    ));
   }
 }
