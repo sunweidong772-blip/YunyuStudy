@@ -5,6 +5,12 @@ import '../math/wrong_book_page.dart';
 import '../auth/login_page.dart';
 import 'message_page.dart';
 import 'homework_page.dart';
+import 'changelog_page.dart';
+import '../chat/conversation_list_page.dart';
+import '../chat/class_list_page.dart';
+import '../assistant/assistant_page.dart';
+import '../teacher_verify/teacher_verify_page.dart';
+import '../admin/admin_users_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -249,6 +255,21 @@ class _ProfilePageState extends State<ProfilePage> {
                           }),
                           _buildDivider(),
                           _buildMenuItem(Icons.calendar_today, '每日打卡', '每天学习后打卡', AppColors.success, _checkIn),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.chat, '私信', '和老师、家长、同学私信沟通', AppColors.primary, () {
+                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ConversationListPage()));
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.group, '班级群', '加入班级群，群内消息互通', AppColors.success, () {
+                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassListPage()));
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.smart_toy, '云屿小助手', '智能问答，今日待办提醒', Colors.purple, () {
+                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const AssistantPage()));
+                          }),
                         ],
                       ),
                     ),
@@ -278,18 +299,36 @@ class _ProfilePageState extends State<ProfilePage> {
                           }, badge: _unreadMessages),
                           _buildDivider(),
                           _buildMenuItem(Icons.help_outline, '帮助中心', '常见问题解答', AppColors.success, () {
-                            _showInfo('帮助中心', '1. 如何使用数学练习？\n点击底部"数学"，选择年级即可开始练习\n\n2. 如何查看作业？\n在"我的"页面点击"我的作业"查看教师布置的作业\n\n3. 错题在哪里？\n在"我的"页面点击"错题本"查看\n\n4. 如何打卡？\n在"我的"页面点击"每日打卡"');
+                            _showInfo('帮助中心', '1. 如何使用数学练习？\n点击底部"数学"，选择年级即可开始练习\n\n2. 如何查看作业？\n在"我的"页面点击"我的作业"查看教师布置的作业\n\n3. 错题在哪里？\n在"我的"页面点击"错题本"查看\n\n4. 如何打卡？\n在"我的"页面点击"每日打卡"\n\n5. 如何认证教师？\n在"我的"页面点击"教师认证"，提交资料后24小时内审核\n\n6. 如何加入班级群？\n在"我的"页面点击"班级群"，查看全部班级群并加入');
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.verified, '教师认证', '认证成为教师，获得教师头衔', AppColors.primary, () {
+                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const TeacherVerifyPage()));
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.update, '更新日志', '查看版本更新历史', AppColors.warning, () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ChangelogPage()));
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.people, '官方QQ群', '加入官方QQ交流群', Colors.blue, () {
+                            _showInfo('官方QQ群', '云屿官方QQ群：1109731425\n\n点击下方按钮一键加入QQ群，与官方人员和其他用户交流。\n\n（如无法自动跳转，请手动搜索群号：1109731425）');
+                          }),
+                          _buildDivider(),
+                          _buildMenuItem(Icons.admin_panel_settings, '用户管理', '管理员功能：添加/删除用户', Colors.purple, () {
+                            if (!ApiService.isLoggedIn) return _showLoginPrompt();
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersPage()));
                           }),
                           _buildDivider(),
                           _buildMenuItem(Icons.info_outline, '关于云屿', '版本信息', AppColors.textTertiary, () {
-                            _showInfo('关于云屿', '云屿小学学业辅导工具\n版本：v2.0.0\n\n涵盖数学练习、英语单词、作文范文三大模块，覆盖小学1-6年级。\n\n教师后台：http://8.160.178.28:8090/admin\n\n让学习更轻松，让成长更快乐！');
+                            _showInfo('关于云屿', '云屿小学学业辅导工具\n版本：v2.1.0\n\n涵盖数学练习、英语单词、作文范文三大模块，覆盖小学1-6年级。\n\n新增：班级群、私信、教师认证、小助手、用户管理\n\n教师后台：http://8.160.178.28:8090/admin\n\n让学习更轻松，让成长更快乐！');
                           }),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Center(child: Text('云屿学习 v2.0.0', style: TextStyle(color: AppColors.textTertiary, fontSize: 12))),
+                  const Center(child: Text('云屿学习 v2.1.0', style: TextStyle(color: AppColors.textTertiary, fontSize: 12))),
                   const SizedBox(height: 12),
                 ],
               ),

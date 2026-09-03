@@ -211,16 +211,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: ChoiceChip(
-                              label: const Text('教师'),
-                              selected: _selectedRole == 'teacher',
-                              onSelected: (_) => setState(() => _selectedRole = 'teacher'),
-                              selectedColor: AppColors.primary,
-                              labelStyle: TextStyle(color: _selectedRole == 'teacher' ? Colors.white : AppColors.textSecondary),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ChoiceChip(
                               label: const Text('家长'),
                               selected: _selectedRole == 'parent',
                               onSelected: (_) => setState(() => _selectedRole = 'parent'),
@@ -230,6 +220,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
+                      const Text('教师身份需通过认证或管理员设置', style: TextStyle(fontSize: 11, color: AppColors.textTertiary)),
                       const SizedBox(height: 16),
                       // 昵称
                       TextField(

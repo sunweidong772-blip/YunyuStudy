@@ -203,11 +203,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  '测试账号：student@qq.com / 123456',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.white60),
-                ),
               ],
             ),
           ),
