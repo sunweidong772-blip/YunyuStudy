@@ -26,20 +26,38 @@ class _SearchPageState extends State<SearchPage> {
       for (int grade = 1; grade <= 6; grade++) {
         for (var word in EnglishData.getWordsByGrade(grade)) {
           if (word.word.toLowerCase().contains(kw) || word.meaning.contains(keyword)) {
-            _results.add({'type': 'word', 'title': word.word, 'subtitle': '${word.meaning} · ${grade}年级', 'data': word});
+            _results.add({
+              'type': 'word',
+              'title': word.word,
+              'subtitle': '${word.meaning} · ${grade}年级',
+              'content': '单词：${word.word}\n释义：${word.meaning}\n年级：${grade}年级\n\n例句：${word.example ?? "暂无例句"}\n\n${word.exampleCn ?? ""}',
+              'data': word
+            });
           }
         }
       }
       // 搜索语文作文
       for (var essay in EssayData.essays) {
-        if (essay.title.contains(keyword) || essay.category.contains(keyword)) {
-          _results.add({'type': 'essay', 'title': essay.title, 'subtitle': '${essay.category} · ${essay.grade}年级', 'data': essay});
+        if (essay.title.contains(keyword) || essay.category.contains(keyword) || essay.content.contains(keyword)) {
+          _results.add({
+            'type': 'essay',
+            'title': essay.title,
+            'subtitle': '${essay.category} · ${essay.grade}年级 · ${essay.wordCount}字',
+            'content': '【${essay.category}】${essay.title}\n年级：${essay.grade}年级\n字数：${essay.wordCount}字\n\n${essay.content}\n\n写作框架：\n${essay.outline}',
+            'data': essay
+          });
         }
       }
       // 搜索英语作文
       for (var essay in EnglishEssayData.essays) {
         if (essay.title.toLowerCase().contains(kw) || essay.titleCn.contains(keyword)) {
-          _results.add({'type': 'english_essay', 'title': essay.title, 'subtitle': '${essay.titleCn} · ${essay.grade}年级', 'data': essay});
+          _results.add({
+            'type': 'english_essay',
+            'title': essay.title,
+            'subtitle': '${essay.titleCn} · ${essay.grade}年级',
+            'content': '【英语作文】${essay.title}\n中文标题：${essay.titleCn}\n年级：${essay.grade}年级\n\n${essay.content}\n\n参考翻译：\n${essay.translation ?? "暂无翻译"}',
+            'data': essay
+          });
         }
       }
     });

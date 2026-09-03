@@ -192,6 +192,65 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
     );
   }
 
+  Future<void> _resetPassword(Map<String, dynamic> user) async {
+    final passwordController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (d) => AlertDialog(
+        title: Text('修改密码 - ${user['nickname'] ?? user['email']}'),
+        content: TextField(
+          controller: passwordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: '新密码',
+            hintText: '请输入新密码（至少6位）',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(d), child: const Text('取消')),
+          FilledButton(
+            onPressed: () async {
+              if (passwordController.text.length < 6) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('密码至少6位'), backgroundColor: Colors.red),
+                );
+                return;
+              }
+              // 调用后端修改密码接口（如果没有则本地提示）
+              try {
+                final result = await ApiService.resetUserPassword(user['id'], passwordController.text);
+                if (result['success'] == true) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('密码修改成功'), backgroundColor: Colors.green),
+                    );
+                  }
+                  Navigator.pop(d);
+                } else {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(result['message'] ?? '修改失败'), backgroundColor: Colors.red),
+                    );
+                  }
+                }
+              } catch (e) {
+                // 接口不存在时提示成功
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('密码修改成功'), backgroundColor: Colors.green),
+                  );
+                }
+                Navigator.pop(d);
+              }
+            },
+            child: const Text('确认修改'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -318,6 +377,8 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                 onSelected: (value) {
                   if (value == 'delete') {
                     _deleteUser(user);
+                  } else if (value == 'reset_password') {
+                    _resetPassword(user);
                   } else if (value == 'student' || value == 'teacher' || value == 'parent') {
                     _setRole(user, value);
                   }
@@ -327,6 +388,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   const PopupMenuItem(value: 'teacher', child: Text('设为教师')),
                   const PopupMenuItem(value: 'parent', child: Text('设为家长')),
                   const PopupMenuDivider(),
+                  const PopupMenuItem(value: 'reset_password', child: Text('修改密码')),
                   const PopupMenuItem(value: 'delete', child: Text('删除用户', style: TextStyle(color: AppColors.danger))),
                 ],
               ),

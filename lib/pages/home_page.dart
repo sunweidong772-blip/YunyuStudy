@@ -7,6 +7,7 @@ import 'english/english_page.dart';
 import 'english/english_essay_page.dart';
 import 'essay/essay_page.dart';
 import 'profile/profile_page.dart';
+import 'profile/message_page.dart';
 import 'search/search_page.dart';
 import 'exam/daily_exam_page.dart';
 
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     const MathPage(),
     const EnglishPage(),
     const EssayPage(),
+    const MessagePage(),
     const ProfilePage(),
   ];
 
@@ -119,7 +121,8 @@ class _HomePageState extends State<HomePage> {
               _buildNavItem(1, Icons.calculate_outlined, Icons.calculate_rounded, '数学'),
               _buildNavItem(2, Icons.menu_book_outlined, Icons.menu_book_rounded, '英语'),
               _buildNavItem(3, Icons.edit_note_outlined, Icons.edit_note_rounded, '作文'),
-              _buildNavItem(4, Icons.person_outline_rounded, Icons.person_rounded, '我的'),
+              _buildNavItem(4, Icons.message_outlined, Icons.message_rounded, '消息'),
+              _buildNavItem(5, Icons.person_outline_rounded, Icons.person_rounded, '我的'),
             ],
           ),
         ),
