@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../data/math_questions.dart';
 import '../../data/study_data.dart';
+import '../../services/api_service.dart';
 
 class PracticePage extends StatefulWidget {
   final int grade;
@@ -37,13 +38,23 @@ class _PracticePageState extends State<PracticePage> {
       if (_selectedAnswer == _questions[_currentIndex].answer) {
         _correctCount++;
       } else {
-        // 记录错题
+        // 记录错题到本地
         StudyData.addWrongQuestion({
           'question': _questions[_currentIndex].question,
           'answer': _questions[_currentIndex].answer,
           'wrongAnswer': _selectedAnswer,
           'explanation': _questions[_currentIndex].explanation,
         });
+        // 同步错题到后端
+        if (ApiService.isLoggedIn) {
+          ApiService.addWrongQuestion(
+            question: _questions[_currentIndex].question,
+            answer: _questions[_currentIndex].answer,
+            wrongAnswer: _selectedAnswer,
+            explanation: _questions[_currentIndex].explanation,
+            grade: widget.grade,
+          );
+        }
       }
     });
   }
@@ -59,6 +70,15 @@ class _PracticePageState extends State<PracticePage> {
       // 完成练习，增加练习次数
       StudyData.addMathPractice();
       StudyData.checkIn();
+      // 同步学习记录到后端
+      if (ApiService.isLoggedIn) {
+        ApiService.submitStudyRecord(
+          type: 'practice',
+          subject: '${widget.grade}年级数学',
+          score: _correctCount,
+          total: _questions.length,
+        );
+      }
       setState(() => _finished = true);
     }
   }

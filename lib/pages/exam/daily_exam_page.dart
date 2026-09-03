@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../data/math_questions.dart';
 import '../../data/study_data.dart';
+import '../../services/api_service.dart';
 
 class DailyExamPage extends StatefulWidget {
   final int grade;
@@ -45,6 +46,16 @@ class _DailyExamPageState extends State<DailyExamPage> {
   void _finishExam() {
     _timerRunning = false;
     StudyData.addExamRecord({'date': DateTime.now().toIso8601String(), 'grade': widget.grade, 'correct': _correctCount, 'total': _questions.length, 'timeUsed': 300 - _timeLeft});
+    // 同步考试记录到后端
+    if (ApiService.isLoggedIn) {
+      ApiService.submitStudyRecord(
+        type: 'exam',
+        subject: '${widget.grade}年级每日小考',
+        score: _correctCount * 10,
+        total: _questions.length * 10,
+        duration: 300 - _timeLeft,
+      );
+    }
     setState(() => _finished = true);
   }
 
@@ -61,6 +72,16 @@ class _DailyExamPageState extends State<DailyExamPage> {
         _correctCount++;
       } else {
         StudyData.addWrongQuestion({'question': _questions[_currentIndex].question, 'answer': _questions[_currentIndex].answer, 'wrongAnswer': _selectedAnswer, 'explanation': _questions[_currentIndex].explanation});
+        // 同步错题到后端
+        if (ApiService.isLoggedIn) {
+          ApiService.addWrongQuestion(
+            question: _questions[_currentIndex].question,
+            answer: _questions[_currentIndex].answer,
+            wrongAnswer: _selectedAnswer,
+            explanation: _questions[_currentIndex].explanation,
+            grade: widget.grade,
+          );
+        }
       }
     });
   }
