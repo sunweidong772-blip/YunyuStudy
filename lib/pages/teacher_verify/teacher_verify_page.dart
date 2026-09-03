@@ -121,7 +121,7 @@ class _TeacherVerifyPageState extends State<TeacherVerifyPage> {
           ? const Center(child: CircularProgressIndicator())
           : _isVerified
               ? _buildVerifiedView()
-              : _verification != null && _verification['status'] == 'pending'
+              : _verification != null && _verification!['status'] == 'pending'
                   ? _buildPendingView()
                   : _buildFormView(),
     );
