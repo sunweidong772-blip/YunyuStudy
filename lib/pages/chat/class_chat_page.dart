@@ -97,6 +97,112 @@ class _ClassChatPageState extends State<ClassChatPage> {
     });
   }
 
+  void _showInviteMembers() {
+    // 模拟可邀请的用户列表
+    final List<Map<String, dynamic>> users = [
+      {'id': 10, 'name': '小红', 'role': 'student', 'grade': '三年级'},
+      {'id': 11, 'name': '小刚', 'role': 'student', 'grade': '三年级'},
+      {'id': 12, 'name': '小丽', 'role': 'student', 'grade': '三年级'},
+      {'id': 13, 'name': '小红妈妈', 'role': 'parent', 'grade': '三年级家长'},
+      {'id': 14, 'name': '小刚爸爸', 'role': 'parent', 'grade': '三年级家长'},
+      {'id': 15, 'name': '王老师', 'role': 'teacher', 'grade': '数学老师'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setSheetState) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text('邀请成员加入群聊', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                Text('${widget.className}', style: const TextStyle(fontSize: 13, color: AppColors.textTertiary)),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 300,
+                  child: ListView.builder(
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      final user = users[index];
+                      final roleColor = user['role'] == 'teacher' ? AppColors.primary : user['role'] == 'parent' ? Colors.teal : Colors.orange;
+                      final roleLabel = user['role'] == 'teacher' ? '教师' : user['role'] == 'parent' ? '家长' : '学生';
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: roleColor.withOpacity(0.2),
+                              child: Text(user['name'].toString().substring(0, 1), style: TextStyle(color: roleColor, fontWeight: FontWeight.w700)),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(user['name'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                                      const SizedBox(width: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                        decoration: BoxDecoration(
+                                          color: roleColor.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(roleLabel, style: TextStyle(fontSize: 10, color: roleColor, fontWeight: FontWeight.w600)),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(user['grade'], style: const TextStyle(fontSize: 12, color: AppColors.textTertiary)),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('已邀请${user["name"]}加入群聊'), backgroundColor: Colors.green),
+                                );
+                              },
+                              child: const Text('邀请'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Color _getRoleColor(String? role) {
     switch (role) {
       case 'teacher': return AppColors.primary;
@@ -131,6 +237,11 @@ class _ClassChatPageState extends State<ClassChatPage> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.person_add),
+            onPressed: _showInviteMembers,
+            tooltip: '邀请成员',
+          ),
           IconButton(
             icon: const Icon(Icons.group),
             onPressed: () {

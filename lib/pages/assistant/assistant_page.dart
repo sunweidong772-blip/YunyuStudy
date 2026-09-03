@@ -87,10 +87,16 @@ class _AssistantPageState extends State<AssistantPage> {
         _addMessage('assistant', '抱歉，出现了一些问题，请稍后再试。');
       }
     } catch (e) {
-      _addMessage('assistant', '网络连接异常，请检查网络后重试。你可以试试问我：怎么学习数学？、怎么背单词？、今天有什么任务？');
+      // 网络错误时给出通用回答
+      final defaultAnswer = _getDefaultAnswer(question);
+      _addMessage('assistant', defaultAnswer);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  String _getDefaultAnswer(String question) {
+    return '你好！我是云屿小助手😊\n\n关于"$question"，我可以帮你：\n\n📚 学习方法：问我"怎么学习数学"、"怎么背单词"\n📝 作文指导：问我"怎么写好作文"、"写人作文要点"\n📅 今日任务：问我"今天有什么任务"\n🔧 使用帮助：问我"怎么用这个APP"\n\n你也可以试试问我这些问题哦！有任何学习问题随时来找我~';
   }
 
   String? _getLocalAnswer(String question) {
