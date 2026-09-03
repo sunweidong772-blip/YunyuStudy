@@ -71,7 +71,7 @@ class _WrongBookPageState extends State<WrongBookPage> {
           ]),
           if (q['explanation'] != null) ...[
             SizedBox(height: 10),
-            Container(padding: EdgeInsets.all(10), decoration: BoxDecoration(color: Color(0xFFFFFBEB), borderRadius: BorderRadius.circular(8)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(Icons.lightbulb, color: AppColors.warning, size: 16), SizedBox(width: 6), Expanded(child: Text(q['explanation'], style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.5)))]))),
+            Container(padding: EdgeInsets.all(10), decoration: BoxDecoration(color: Color(0xFFFFFBEB), borderRadius: BorderRadius.circular(8)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(Icons.lightbulb, color: AppColors.warning, size: 16), SizedBox(width: 6), Expanded(child: Text(q['explanation'], style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.5)))])),
           ],
         ],
       ),
