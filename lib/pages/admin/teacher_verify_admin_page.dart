@@ -24,7 +24,7 @@ class _TeacherVerifyAdminPageState extends State<TeacherVerifyAdminPage> {
     try {
       final result = await ApiService.getVerifications();
       if (result['success'] == true) {
-        setState(() => _verifications = result['verifications'] ?? []);
+        setState(() => _verifications = result['list'] ?? []);
       }
     } catch (e) {
       // ignore

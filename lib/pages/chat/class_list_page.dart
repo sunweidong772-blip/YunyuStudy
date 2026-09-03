@@ -128,7 +128,21 @@ class _ClassListPageState extends State<ClassListPage> with SingleTickerProvider
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('创建成功'), backgroundColor: Colors.green),
                   );
-                  _loadData();
+                  // 直接把新创建的群添加到列表中
+                  final newClass = {
+                    'id': result['class_id'] ?? DateTime.now().millisecondsSinceEpoch,
+                    'name': nameController.text.trim(),
+                    'description': descController.text.trim().isEmpty ? '暂无描述' : descController.text.trim(),
+                    'member_count': 1,
+                    'creator': ApiService.currentUser?['nickname'] ?? '我',
+                    'is_joined': true,
+                  };
+                  setState(() {
+                    _myClasses.insert(0, newClass);
+                    if (!_allClasses.any((c) => c['id'] == newClass['id'])) {
+                      _allClasses.insert(0, newClass);
+                    }
+                  });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(result['message'] ?? '创建失败'), backgroundColor: Colors.red),
