@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../theme/app_theme.dart';
 import '../../services/api_service.dart';
 
@@ -15,6 +17,8 @@ class _TeacherVerifyPageState extends State<TeacherVerifyPage> {
   final _qqController = TextEditingController();
   final _wechatController = TextEditingController();
   final _workExperienceController = TextEditingController();
+  final ImagePicker _imagePicker = ImagePicker();
+  File? _certificateImage;
 
   bool _isLoading = true;
   bool _isSubmitting = false;
@@ -26,6 +30,26 @@ class _TeacherVerifyPageState extends State<TeacherVerifyPage> {
   void initState() {
     super.initState();
     _loadStatus();
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          _certificateImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('选择图片失败：$e')),
+      );
+    }
   }
 
   @override
@@ -239,6 +263,54 @@ class _TeacherVerifyPageState extends State<TeacherVerifyPage> {
           const SizedBox(height: 24),
           const Text('工作经历 / 教师资格证', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
           const SizedBox(height: 16),
+          // 图片上传区域
+          GestureDetector(
+            onTap: _pickImage,
+            child: Container(
+              width: double.infinity,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.divider, style: BorderStyle.solid),
+              ),
+              child: _certificateImage != null
+                  ? Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(_certificateImage!, fit: BoxFit.cover),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () => setState(() => _certificateImage = null),
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.black54,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.close, color: Colors.white, size: 16),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_photo_alternate_outlined, color: Colors.grey.shade400, size: 36),
+                        const SizedBox(height: 8),
+                        Text('点击上传教师资格证图片', style: TextStyle(fontSize: 13, color: Colors.grey.shade500)),
+                        Text('支持JPG、PNG格式', style: TextStyle(fontSize: 11, color: Colors.grey.shade400)),
+                      ],
+                    ),
+            ),
+          ),
+          const SizedBox(height: 12),
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.divider),
@@ -246,9 +318,9 @@ class _TeacherVerifyPageState extends State<TeacherVerifyPage> {
             ),
             child: TextField(
               controller: _workExperienceController,
-              maxLines: 5,
+              maxLines: 4,
               decoration: const InputDecoration(
-                hintText: '请描述您的教学工作经历，或上传教师资格证图片（图片上传功能开发中，可先填写文字描述）',
+                hintText: '请描述您的教学工作经历（选填，如已上传教师资格证图片可不填）',
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(12),
               ),
