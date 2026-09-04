@@ -247,27 +247,31 @@ class StudyHomePage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(child: _buildQuickItem(Icons.assignment, '每日小考', Color(0xFFEF4444), () => _showGradeDialog(context, '每日小考')),),
-                  SizedBox(width: 10),
-                  Expanded(child: _buildQuickItem(Icons.g_translate, '英语作文', Color(0xFF10B981), () => Navigator.push(context, MaterialPageRoute(builder: (_) => EnglishEssayPage()))),),
-                  SizedBox(width: 10),
-                  Expanded(child: _buildQuickItem(Icons.error_outline, '错题本', Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => WrongBookPage()))),),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(child: _buildQuickItem(Icons.menu_book, '教材全解', Color(0xFF6366F1), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TextbookPage()))),),
-                  SizedBox(width: 10),
-                  Expanded(child: _buildQuickItem(Icons.search, '搜索教材', Color(0xFF0EA5E9), () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('搜索教材功能开发中')));
-                  })),
-                  SizedBox(width: 10),
-                  Expanded(child: _buildQuickItem(Icons.help_outline, '学习助手', Color(0xFF8B5CF6), () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('学习助手功能开发中')));
-                  })),
+                  Row(
+                    children: [
+                      Expanded(child: _buildQuickItem(Icons.assignment, '每日小考', Color(0xFFEF4444), () => _showGradeDialog(context, '每日小考')),),
+                      SizedBox(width: 10),
+                      Expanded(child: _buildQuickItem(Icons.g_translate, '英语作文', Color(0xFF10B981), () => Navigator.push(context, MaterialPageRoute(builder: (_) => EnglishEssayPage()))),),
+                      SizedBox(width: 10),
+                      Expanded(child: _buildQuickItem(Icons.error_outline, '错题本', Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => WrongBookPage()))),),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(child: _buildQuickItem(Icons.menu_book, '教材全解', Color(0xFF6366F1), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TextbookPage()))),),
+                      SizedBox(width: 10),
+                      Expanded(child: _buildQuickItem(Icons.search, '搜索教材', Color(0xFF0EA5E9), () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('搜索教材功能开发中')));
+                      })),
+                      SizedBox(width: 10),
+                      Expanded(child: _buildQuickItem(Icons.help_outline, '学习助手', Color(0xFF8B5CF6), () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('学习助手功能开发中')));
+                      })),
+                    ],
+                  ),
                 ],
               ),
             ),
